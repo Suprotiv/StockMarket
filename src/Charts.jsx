@@ -77,7 +77,7 @@ const Charts = ({ getData, name }) => {
       }, // Set fixed height for the chart
       animation: {
         enabled: true,
-        duration: 20000,
+        duration: 900000,
         easing: "linear",
       },
     }),
@@ -92,7 +92,7 @@ const Charts = ({ getData, name }) => {
       }
     };
 
-    const timeout = setTimeout(updatePrice, 1500);
+    const timeout = setTimeout(updatePrice, 60000);
 
     return () => clearTimeout(timeout);
   }, [currentIndex, getData]);

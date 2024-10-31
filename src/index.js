@@ -3,11 +3,33 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {
+  createHashRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Session1 from './Session1';
+import Session2 from './Session2';
+import Session3 from './Session3';
+
+const router = createHashRouter([
+  {
+    path: "/",
+    element: <><Session1 /></>
+  },
+  {
+    path: "/session2",
+    element: <><Session2 /></>
+  },
+  {
+    path: "/session3",
+    element: <><Session3 /></>
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+   <RouterProvider router={router} />
   </React.StrictMode>
 );
 
