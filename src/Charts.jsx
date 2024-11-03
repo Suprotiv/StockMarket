@@ -1,121 +1,130 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { AgCharts } from "ag-charts-react";
-import "ag-charts-enterprise";
+import React, { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const numFormatter = new Intl.NumberFormat("en-US");
 
-const tooltip = {
-  renderer: ({ title, datum, xKey, yKey }) => ({
-    title,
-    content: `${datum[xKey]}: ₹${numFormatter.format(datum[yKey])}`,
-  }),
-};
-
-const Charts = ({ getData, name }) => {
+const StockChart = ({ getData, name, range }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [latestPrice, setLatestPrice] = useState(getData[0].price);
+  const [dataPoints, setDataPoints] = useState([getData[0].price]);
 
-  const lineOptions = useMemo(
-    () => ({
-      data: getData,
-      series: [
-        {
-          type: "line",
-          xKey: "time",
-          yKey: "price",
-          yName: "Stock Price",
-          tooltip,
-          marker: {
-            enabled: true,
-            shape: "circle",
-            size: 6,
-            fill: "#f5f5f5",
-          },
-          stroke: "#00ffcc",
-        },
-      ],
-      axes: [
-        {
-          type: "number",
-          position: "bottom",
-          title: { text: "Time (min)", fill: "#ffffff" },
-          label: {
-            color: "#ffffff",
-          },
-          tick: { stroke: "#ffffff" },
-          gridStyle: [{ stroke: "#333333" }],
-        },
-        {
-          type: "number",
-          position: "left",
-          title: { text: "Stock Price (₹)", fill: "#ffffff" },
-          label: {
-            color: "#ffffff",
-            formatter: (params) => `₹${params.value}`,
-          },
-          tick: { stroke: "#ffffff" },
-          gridStyle: [{ stroke: "#333333" }],
-        },
-      ],
-      background: {
-        fill: "#1e1e1e",
-      },
-      autoSize: false, // Disable auto-sizing
-      width: 300, // Set fixed width for the chart
-      height: 200,
-      padding: {
-        top: 10,    // Adjust padding as needed
-        right: 10,
-        bottom: 10,
-        left: 0,
-      },
-      margin: {
-        top: 10,    // Adjust padding as needed
-        right: 10,
-        bottom: 10,
-        left: 0,
-      }, // Set fixed height for the chart
-      animation: {
-        enabled: true,
-        duration: 900000,
-        easing: "linear",
-      },
-    }),
-    [getData]
-  );
+  const initialPrice = getData[0]?.price || 0;
 
   useEffect(() => {
-    const updatePrice = () => {
-      if (currentIndex < getData.length - 1) {
-        setCurrentIndex((prevIndex) => prevIndex + 1);
-        setLatestPrice(getData[currentIndex + 1].price);
+    const updateRandomPrice = () => {
+      const targetPrice = getData[currentIndex + 1]?.price;
+      if (targetPrice !== undefined) {
+        const remainingUpdates = 12 - (Math.floor(currentIndex / 5) % 12);
+        const difference = (targetPrice - latestPrice) / remainingUpdates;
+        const randomFluctuation = difference * (Math.random() * 0.4 - 0.2); // Random fluctuation between -20% and +20% of the required difference
+
+        setLatestPrice((prevPrice) => prevPrice + difference + randomFluctuation);
       }
     };
 
-    const timeout = setTimeout(updatePrice, 60000);
+    const intervalId = setInterval(() => {
+      if (currentIndex < getData.length - 1) {
+        updateRandomPrice();
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 5000);
 
-    return () => clearTimeout(timeout);
+    const timeoutId = setTimeout(() => {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+      setLatestPrice(getData[currentIndex + 1]?.price); // Snap to exact target price at each minute
+    }, 60000);
+
+    return () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+    };
   }, [currentIndex, getData]);
 
+  // Update data points with each latestPrice change
+  useEffect(() => {
+    setDataPoints((prevData) => [...prevData, latestPrice]);
+  }, [latestPrice]);
+
+  const chartData = {
+   labels: dataPoints.map((_, i) => (i * 5)-5 <0 ? null : (i * 5)-5), // Time labels based on the number of data points
+    datasets: [
+      {
+        label: "Stock Price (₹)",
+        data: dataPoints,
+        borderColor: "#00ffcc",
+        backgroundColor: "rgba(0, 255, 204, 0.1)",
+        pointRadius: 0,
+        borderWidth: 2,
+        tension: 0.1, // Smooth curve
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,  // Allow chart to fit the div
+    layout: {
+      padding: {
+        top: 25,
+       
+        bottom: 10,
+      
+      },
+    },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          text: "Time (sec)",
+          color: "#ffffff",
+        },
+        ticks: {
+          color: "#ffffff",
+        },
+      },
+      y: {
+        display: true,
+        title: {
+          display: true,
+          text: "Stock Price (₹)",
+          color: "#ffffff",
+        },
+        ticks: {
+          color: "#ffffff",
+          callback: (value) => `₹${numFormatter.format(value)}`,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          color: "#ffffff",
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => `₹${numFormatter.format(context.raw)}`,
+        },
+      },
+    },
+  };
   return (
-    <div className="relative rounded-lg overflow-hidden bg-[#1e1e1e]">
-      {/* Custom Title Positioned to the Left */}
+    <div className="relative rounded-lg overflow-hidden bg-[#1e1e1e] p-4 h-[250px]">
       <div className="absolute top-2 left-2 text-white text-xs font-bold z-10 pl-5 py-1">
-      {name}
+        {name}
       </div>
-      <div className="my-10"></div>
-
-      {/* Chart container with fixed size */}
-      <div >
-        <AgCharts options={lineOptions} className="rounded-lg" />
-      </div>
-
-      {// Stock Price and Time Overlay
+      <Line data={chartData} options={options} />
       <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-md z-10">
-        <strong> Price:</strong> ₹{numFormatter.format(latestPrice)}
-      </div> }
+        <strong>Price:</strong> ₹{numFormatter.format(latestPrice)}
+      </div>
     </div>
   );
 };
 
-export default Charts;
+export default StockChart;

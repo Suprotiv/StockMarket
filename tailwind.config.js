@@ -4,12 +4,12 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        fadeOut: 'fadeOut 0.5s ease-in-out forwards',
+        fadeIn: 'fadeIn 1s ease-in-out forwards',
       },
       keyframes: {
-        fadeOut: {
-          '0%': { opacity: '1' },
-          '100%': { opacity: '0' },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
       },
     },

@@ -3,6 +3,7 @@ import Charts from "./Charts";
 import Popup from "./Popup";
 import { Link, useNavigate } from "react-router-dom";
 
+
 const Session1 = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [screen,setScreen]=useState(true)
@@ -37,6 +38,7 @@ const Session1 = () => {
         { time: 9, price: 305.0 }, // New arbitrary time slot
         { time: 10, price: 306.01 },
       ],
+      range:0.1,
     },
     {
       name: "ITC",
@@ -53,6 +55,7 @@ const Session1 = () => {
         { time: 9, price: 498.0 }, // New arbitrary time slot
         { time: 10, price: 500.93 },
       ],
+      range:0.4,
     },
     {
       name: "Maruti Suzuki",
@@ -69,6 +72,7 @@ const Session1 = () => {
         { time: 9, price: 12550.0 }, // New arbitrary time slot
         { time: 10, price: 12602.9 },
       ],
+      range:0.15,
     },
     {
       name: "Adani Enterprises",
@@ -85,6 +89,7 @@ const Session1 = () => {
         { time: 9, price: 2800.0 }, // New arbitrary time slot
         { time: 10, price: 2766.81 },
       ],
+      range:0.25,
     },
     {
       name: "Hindustan Aeronautics",
@@ -101,6 +106,7 @@ const Session1 = () => {
         { time: 9, price: 5100.0 }, // New arbitrary time slot
         { time: 10, price: 5140.49 },
       ],
+      range:0.3,
     },
     {
       name: "Jio Financial Services",
@@ -117,6 +123,7 @@ const Session1 = () => {
         { time: 9, price: 349.5 }, // New arbitrary time slot
         { time: 10, price: 348.88 },
       ],
+      range:0.15,
     },
     {
       name: "Tata Power",
@@ -133,6 +140,7 @@ const Session1 = () => {
         { time: 9, price: 430.0 }, // New arbitrary time slot
         { time: 10, price: 431.78 },
       ],
+      range:0.15,
     },
     {
       name: "InterGlobe Aviation",
@@ -149,6 +157,7 @@ const Session1 = () => {
         { time: 9, price: 5100.0 }, // New arbitrary time slot
         { time: 10, price: 5390.10 },
       ],
+      range:0.1,
     },
     {
       name: "Zomato",
@@ -165,6 +174,7 @@ const Session1 = () => {
         { time: 9, price: 302.0 }, // New arbitrary time slot
         { time: 10, price: 301.87 },
       ],
+      range:0.15,
     },
     {
       name: "Asian Paints",
@@ -181,10 +191,12 @@ const Session1 = () => {
         { time: 9, price: 3115.0 }, // New arbitrary time slot
         { time: 10, price: 3121.08 },
       ],
+      range:0.1,
     },
   ],[]);
 
   useEffect(()=>{
+    
     setTimeout(()=>{
       setScreen(false);
     },3500)
@@ -211,6 +223,9 @@ const Session1 = () => {
   }, [popupCount]);
 
   const changeSession =()=>{
+    const audio = new Audio('/sound.mov');
+    audio.play();
+
     navigate('/session2')
   }
 
@@ -221,21 +236,19 @@ const Session1 = () => {
   return (
     <div>      
       {/* Render the Popup with the current message */}
-     { screen ?
-      <div className="fixed inset-0 bg-black opacity-100 z-50 "></div>:
-      null}
+    
       <Popup visible={popupVisible} message={currentMessage} />
       <div className="flex flex-wrap">
-        {datasets.map(({ name, data }, index) => (
-          <div key={index} className="w-[25%] p-[2vh]">
-            <Charts getData={data} name={name} />
+        {datasets.map(({ name, data , range }, index) => (
+          <div key={index} className="w-[25%] py-[2vh] px-[1.2vh]">
+            <Charts getData={data} name={name} range={range} />
           </div>
         ))}
         <div className="flex justify-center items-center mx-auto">
         {
           button ?
         
-         <button  onClick={changeSession} className="btn btn-outline btn-info z-50">Next Session</button>
+         <button  onClick={changeSession} className="btn btn-outline btn-info z-50 animate-fadeIn">Next Session</button>
       
          : null
         }

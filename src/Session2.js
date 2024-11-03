@@ -4,7 +4,7 @@ import Popup from "./Popup";
 import { Link, useNavigate } from "react-router-dom";
 
 const Session2 = () => {
-  const [popupVisible, setPopupVisible] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(true);
   const [screen,setScreen]=useState(true)
  
   const [popupCount, setPopupCount] = useState(0);
@@ -21,6 +21,9 @@ const Session2 = () => {
   ];
 
   // Memoize the datasets to prevent reference changes on each render
+  useEffect(() => {
+    setTimeout(() => setPopupVisible(false), 10000);
+  }, []);
   
 
   const datasets1 = useMemo(() => [
@@ -38,7 +41,8 @@ const Session2 = () => {
           { time: 8, price: 286.10 },
           { time: 9, price: 294.0 }, // Arbitrary value
           { time: 10, price: 305.27 }
-        ]
+        ],
+        range:0.1,
       },
       {
         name: "ITC",
@@ -54,7 +58,8 @@ const Session2 = () => {
           { time: 8, price: 324.69 },
           { time: 9, price: 325.0 }, // Arbitrary value
           { time: 10, price: 328.91 }
-        ]
+        ],
+        range:0.4,
       },
       {
         name: "Maruti Suzuki",
@@ -70,7 +75,9 @@ const Session2 = () => {
           { time: 8, price: 11629.64 },
           { time: 9, price: 11600.0 }, // Arbitrary value
           { time: 10, price: 11524.97 }
-        ]
+        ],
+        range:0.15,
+
       },      
       {
         name: "Adani Enterprises",
@@ -86,7 +93,8 @@ const Session2 = () => {
           { time: 8, price: 2522.11 },
           { time: 9, price: 2530.0 }, // Arbitrary value
           { time: 10, price: 2476.72 }
-        ]
+        ],
+        range:0.25,
       },
       {
         name: "Hindustan Aeronautics",
@@ -102,7 +110,9 @@ const Session2 = () => {
           { time: 8, price: 5311.74 },
           { time: 9, price: 5320.0 }, // Arbitrary value
           { time: 10, price: 5332.98 }
-        ]
+        ],
+        range:0.3,
+        
       },
       {
         name: "Jio Financial Services",
@@ -112,13 +122,14 @@ const Session2 = () => {
           { time: 2, price: 349.57 },
           { time: 3, price: 335.0 }, // Arbitrary value
           { time: 4, price: 322.66 },
-          { time: 5, price: 323.0 }, // Arbitrary value
+          { time: 5, price: 333.0 }, // Arbitrary value
           { time: 6, price: 341.37 },
           { time: 7, price: 342.0 }, // Arbitrary value
           { time: 8, price: 368.34 },
           { time: 9, price: 369.0 }, // Arbitrary value
           { time: 10, price: 374.60 }
-        ]
+        ],
+        range:0.15,
       },
       {
         name: "Tata Power",
@@ -134,7 +145,9 @@ const Session2 = () => {
           { time: 8, price: 414.35 },
           { time: 9, price: 415.0 }, // Arbitrary value
           { time: 10, price: 423.88 }
-        ]
+        ],
+        range:0.15,
+        
       }, 
       {
         name: "InterGlobe Aviation",
@@ -142,7 +155,7 @@ const Session2 = () => {
           { time: 0, price: 5390.10 },
           { time: 1, price: 5400.0 }, // Arbitrary value
           { time: 2, price: 5514.07 },
-          { time: 3, price: 5520.0 }, // Arbitrary value
+          { time: 3, price: 5290.0 }, // Arbitrary value
           { time: 4, price: 5001.27 },
           { time: 5, price: 5005.0 }, // Arbitrary value
           { time: 6, price: 4891.24 },
@@ -150,7 +163,9 @@ const Session2 = () => {
           { time: 8, price: 5067.32 },
           { time: 9, price: 4950.0 }, // Arbitrary value
           { time: 10, price: 4854.50 }
-        ]
+        ],
+        range:0.1,
+        
     },      
     {
       name: "Zomato",
@@ -167,6 +182,7 @@ const Session2 = () => {
         { time: 9, price: 302.0 }, // New arbitrary time slot
         { time: 10, price: 296.99 },
       ],
+      range:0.15,
     },
     {
         name: "Asian Paints",
@@ -174,7 +190,7 @@ const Session2 = () => {
           { time: 0, price: 3121.08 },
           { time: 1, price: 3125.0 }, // Arbitrary value
           { time: 2, price: 3142.93 },
-          { time: 3, price: 3150.0 }, // Arbitrary value
+          { time: 3, price: 3050.0 }, // Arbitrary value
           { time: 4, price: 2944.92 },
           { time: 5, price: 2950.0 }, // Arbitrary value
           { time: 6, price: 2971.43 },
@@ -182,12 +198,16 @@ const Session2 = () => {
           { time: 8, price: 3209.14 },
           { time: 9, price: 3190.0 }, // Arbitrary value
           { time: 10, price: 3093.61 }
-        ]
+        ],
+        range:0.1,
       }
       
   ],[]);
 
   const changeSession =()=>{
+    const audio = new Audio('../public/sound.mov');
+    audio.play();
+
     navigate('/session3')
   }
   useEffect(()=>{
@@ -222,16 +242,13 @@ const Session2 = () => {
   return (
     <div>
       
-      { screen ?
-      <div className="fixed inset-0 bg-black opacity-100 z-50 "></div>:
-      null}
 
       {/* Render the Popup with the current message */}
       <Popup visible={popupVisible} message={currentMessage} />
 
       <div className="flex flex-wrap">
         {datasets1.map(({ name, data }, index) => (
-          <div key={index} className="w-[25%] p-[2vh]">
+          <div key={index} className="w-[25%] py-[2vh] px-[1.2vh]">
             <Charts getData={data} name={name} />
           </div>
         ))}

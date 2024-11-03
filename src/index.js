@@ -10,10 +10,15 @@ import {
 import Session1 from './Session1';
 import Session2 from './Session2';
 import Session3 from './Session3';
+import Home from './Home';
 
 const router = createHashRouter([
   {
     path: "/",
+    element: <><Home/></>
+  },
+  {
+    path: "/session1",
     element: <><Session1 /></>
   },
   {
