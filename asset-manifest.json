@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/stockmarket/static/css/main.2296b788.css",
-    "main.js": "/stockmarket/static/js/main.922a9562.js",
+    "main.js": "/stockmarket/static/js/main.584d1e8d.js",
     "static/js/453.50e62e52.chunk.js": "/stockmarket/static/js/453.50e62e52.chunk.js",
     "index.html": "/stockmarket/index.html",
     "main.2296b788.css.map": "/stockmarket/static/css/main.2296b788.css.map",
-    "main.922a9562.js.map": "/stockmarket/static/js/main.922a9562.js.map",
+    "main.584d1e8d.js.map": "/stockmarket/static/js/main.584d1e8d.js.map",
     "453.50e62e52.chunk.js.map": "/stockmarket/static/js/453.50e62e52.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2296b788.css",
-    "static/js/main.922a9562.js"
+    "static/js/main.584d1e8d.js"
   ]
 }
